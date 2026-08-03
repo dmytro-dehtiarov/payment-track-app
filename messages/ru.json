@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "clientType_person": "Физлицо",
+    "clientType_fop": "ФОП",
+    "clientType_company": "Компания",
+    "balance_owesMe": "Должен мне: {amount}",
+    "balance_overpaid": "Переплата: {amount}",
+    "balance_settled": "Оплачено полностью",
+    "cancel": "Отмена",
+    "backToClients": "← Все клиенты"
+  },
+  "HomePage": {
+    "title": "Клиенты",
+    "settingsLink": "Настройки",
+    "reportLink": "Отчёт",
+    "searchPlaceholder": "Поиск по имени",
+    "sortByLastActivity": "По дате активности",
+    "sortByBalance": "По сумме долга",
+    "sortByName": "По алфавиту",
+    "orderDesc": "По убыванию",
+    "orderAsc": "По возрастанию",
+    "apply": "Применить",
+    "noResults": "Ничего не найдено.",
+    "noClients": "Клиентов пока нет."
+  },
+  "AddClientModal": {
+    "addClient": "Добавить клиента",
+    "title": "Новый клиент",
+    "name": "Имя / название",
+    "type": "Тип",
+    "add": "Добавить",
+    "adding": "Добавление…",
+    "error": "Не удалось добавить клиента. Проверьте имя."
+  },
+  "ClientDetailView": {
+    "edit": "Редактировать",
+    "archive": "Архивировать",
+    "archiveConfirm": "Архивировать клиента «{name}»? Он исчезнет из главного списка, но история сохранится.",
+    "archived": "В архиве",
+    "save": "Сохранить",
+    "saving": "Сохранение…",
+    "saveError": "Не удалось сохранить изменения",
+    "contactPlaceholder": "Телефон, email",
+    "notesPlaceholder": "Заметки",
+    "addInvoice": "Добавить счёт",
+    "addPayment": "Добавить оплату",
+    "history": "История"
+  },
+  "QuickAddForm": {
+    "addInvoiceTitle": "Добавить счёт",
+    "addPaymentTitle": "Добавить оплату",
+    "date": "Дата",
+    "amount": "Сумма",
+    "description": "Описание",
+    "save": "Сохранить",
+    "saving": "Сохранение…",
+    "invalidAmount": "Введите корректную сумму",
+    "saveError": "Не удалось сохранить запись"
+  },
+  "HistoryFeed": {
+    "noEntries": "Записей пока нет.",
+    "invoice": "Счёт",
+    "payment": "Оплата",
+    "edit": "Изменить",
+    "delete": "Удалить",
+    "save": "Сохранить",
+    "saving": "Сохранение…",
+    "deleteConfirm": "Удалить запись без возможности восстановления?",
+    "invalidAmount": "Введите корректную сумму",
+    "saveError": "Не удалось сохранить изменения"
+  },
+  "LoginPage": {
+    "title": "Вход",
+    "invalidPassword": "Неверный пароль или слишком много попыток. Попробуйте позже.",
+    "password": "Пароль",
+    "submit": "Войти"
+  },
+  "SettingsPage": {
+    "title": "Настройки"
+  },
+  "ReportPage": {
+    "title": "Отчёт по обороту",
+    "from": "С",
+    "to": "По",
+    "allClients": "Все клиенты",
+    "apply": "Показать",
+    "client": "Клиент",
+    "balanceAtStart": "Баланс на начало",
+    "totalInvoiced": "Выставлено счетов",
+    "totalPaid": "Получено оплат",
+    "netChange": "Изменение",
+    "balanceAtEnd": "Баланс на конец",
+    "total": "ИТОГО",
+    "exportCsv": "Экспорт в CSV",
+    "exportXlsx": "Экспорт в Excel",
+    "noData": "Нет данных за этот период."
+  },
+  "SettingsForm": {
+    "appearanceTitle": "Оформление и валюта",
+    "theme": "Тема",
+    "themeLight": "Светлая",
+    "themeDark": "Тёмная",
+    "currencySymbol": "Символ валюты",
+    "language": "Язык интерфейса",
+    "languageRu": "Русский",
+    "languageEn": "English",
+    "save": "Сохранить",
+    "saving": "Сохранение…",
+    "saved": "Настройки сохранены",
+    "saveError": "Не удалось сохранить настройки",
+    "changePasswordTitle": "Смена пароля",
+    "currentPassword": "Текущий пароль",
+    "newPassword": "Новый пароль",
+    "changePassword": "Сменить пароль",
+    "changingPassword": "Смена пароля…",
+    "passwordChanged": "Пароль изменён",
+    "passwordChangeError": "Не удалось сменить пароль"
+  }
+}

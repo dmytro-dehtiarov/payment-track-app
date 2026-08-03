@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/*
+ * Class-based dark mode instead of Tailwind v4's `prefers-color-scheme`
+ * default: the app's theme is a user setting stored in Settings (DB is the
+ * source of truth, see Architecture.md ch.3), applied as a `dark` class on
+ * <html> by the root layout -- not left to the OS/browser preference.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -12,11 +20,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 body {

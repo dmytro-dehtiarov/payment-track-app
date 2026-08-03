@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "clientType_person": "Individual",
+    "clientType_fop": "Sole proprietor",
+    "clientType_company": "Company",
+    "balance_owesMe": "Owes me: {amount}",
+    "balance_overpaid": "Overpaid: {amount}",
+    "balance_settled": "Fully paid",
+    "cancel": "Cancel",
+    "backToClients": "← All clients"
+  },
+  "HomePage": {
+    "title": "Clients",
+    "settingsLink": "Settings",
+    "reportLink": "Report",
+    "searchPlaceholder": "Search by name",
+    "sortByLastActivity": "By last activity",
+    "sortByBalance": "By balance",
+    "sortByName": "Alphabetically",
+    "orderDesc": "Descending",
+    "orderAsc": "Ascending",
+    "apply": "Apply",
+    "noResults": "No results found.",
+    "noClients": "No clients yet."
+  },
+  "AddClientModal": {
+    "addClient": "Add client",
+    "title": "New client",
+    "name": "Name",
+    "type": "Type",
+    "add": "Add",
+    "adding": "Adding…",
+    "error": "Couldn't add the client. Check the name."
+  },
+  "ClientDetailView": {
+    "edit": "Edit",
+    "archive": "Archive",
+    "archiveConfirm": "Archive client \"{name}\"? They will disappear from the main list, but their history is kept.",
+    "archived": "Archived",
+    "save": "Save",
+    "saving": "Saving…",
+    "saveError": "Couldn't save the changes",
+    "contactPlaceholder": "Phone, email",
+    "notesPlaceholder": "Notes",
+    "addInvoice": "Add invoice",
+    "addPayment": "Add payment",
+    "history": "History"
+  },
+  "QuickAddForm": {
+    "addInvoiceTitle": "Add invoice",
+    "addPaymentTitle": "Add payment",
+    "date": "Date",
+    "amount": "Amount",
+    "description": "Description",
+    "save": "Save",
+    "saving": "Saving…",
+    "invalidAmount": "Enter a valid amount",
+    "saveError": "Couldn't save the record"
+  },
+  "HistoryFeed": {
+    "noEntries": "No records yet.",
+    "invoice": "Invoice",
+    "payment": "Payment",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "saving": "Saving…",
+    "deleteConfirm": "Delete this record permanently?",
+    "invalidAmount": "Enter a valid amount",
+    "saveError": "Couldn't save the changes"
+  },
+  "LoginPage": {
+    "title": "Sign in",
+    "invalidPassword": "Wrong password or too many attempts. Try again later.",
+    "password": "Password",
+    "submit": "Sign in"
+  },
+  "SettingsPage": {
+    "title": "Settings"
+  },
+  "ReportPage": {
+    "title": "Turnover report",
+    "from": "From",
+    "to": "To",
+    "allClients": "All clients",
+    "apply": "Show",
+    "client": "Client",
+    "balanceAtStart": "Balance at start",
+    "totalInvoiced": "Invoiced",
+    "totalPaid": "Paid",
+    "netChange": "Net change",
+    "balanceAtEnd": "Balance at end",
+    "total": "TOTAL",
+    "exportCsv": "Export to CSV",
+    "exportXlsx": "Export to Excel",
+    "noData": "No data for this period."
+  },
+  "SettingsForm": {
+    "appearanceTitle": "Appearance and currency",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "currencySymbol": "Currency symbol",
+    "language": "Interface language",
+    "languageRu": "Русский",
+    "languageEn": "English",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Settings saved",
+    "saveError": "Couldn't save settings",
+    "changePasswordTitle": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "changePassword": "Change password",
+    "changingPassword": "Changing password…",
+    "passwordChanged": "Password changed",
+    "passwordChangeError": "Couldn't change the password"
+  }
+}

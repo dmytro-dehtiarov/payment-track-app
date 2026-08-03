@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    # Local network only by default. To expose to the internet, put a
+    # reverse proxy (Caddy/Nginx) with HTTPS in front instead of publishing
+    # this port directly (Architecture.md ch.9).
+    ports:
+      - "3000:3000"
+    environment:
+      # Fixed, separate from the local-dev DATABASE_URL in .env: the SQLite
+      # file lives on the persistent volume below, not inside the app dir.
+      DATABASE_URL: file:/app/data/prod.db
+      # Read from a .env file next to this compose file (see .env.example).
+      AUTH_SECRET: ${AUTH_SECRET}
+      ADMIN_INITIAL_PASSWORD: ${ADMIN_INITIAL_PASSWORD}
+    volumes:
+      - db-data:/app/data
+
+volumes:
+  db-data:

@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum ClientType {
+  person
+  fop
+  company
+}
+
+enum Theme {
+  light
+  dark
+}
+
+enum Language {
+  ru
+  en
+}
+
+model Client {
+  id          String      @id @default(uuid())
+  name        String
+  type        ClientType
+  contactInfo String?
+  notes       String?
+  createdAt   DateTime    @default(now())
+  archived    Boolean     @default(false)
+  invoices    Invoice[]
+  payments    Payment[]
+}
+
+model Invoice {
+  id          String   @id @default(uuid())
+  clientId    String
+  client      Client   @relation(fields: [clientId], references: [id])
+  date        DateTime
+  amountMinor Int
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@index([clientId])
+}
+
+model Payment {
+  id          String   @id @default(uuid())
+  clientId    String
+  client      Client   @relation(fields: [clientId], references: [id])
+  date        DateTime
+  amountMinor Int
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@index([clientId])
+}
+
+// Single-row table: the app is single-user, so this doubles as both
+// app config and the admin's credential store (see Architecture.md ch.8).
+model Settings {
+  id             String   @id @default(uuid())
+  theme          Theme
+  currencySymbol String
+  language       Language
+  passwordHash   String
+  updatedAt      DateTime @updatedAt
+}
