@@ -35,7 +35,7 @@ describe("getTurnoverReport", () => {
       data: { clientId: client.id, date: new Date("2025-12-01"), amountMinor: 50000 },
     });
     await testDb.prisma.payment.create({
-      data: { clientId: client.id, date: new Date("2025-12-15"), amountMinor: 20000 },
+      data: { clientId: client.id, date: new Date("2025-12-15"), amountMinor: 20000, method: "cash" },
     });
     // On the boundary date itself -- should NOT count toward balanceAtStart.
     await testDb.prisma.invoice.create({
@@ -57,7 +57,7 @@ describe("getTurnoverReport", () => {
       data: { clientId: client.id, date: new Date("2025-06-01"), amountMinor: 100000 },
     });
     await testDb.prisma.payment.create({
-      data: { clientId: client.id, date: new Date("2026-01-10"), amountMinor: 40000 },
+      data: { clientId: client.id, date: new Date("2026-01-10"), amountMinor: 40000, method: "cash" },
     });
     await testDb.prisma.invoice.create({
       data: { clientId: client.id, date: new Date("2026-01-20"), amountMinor: 15000 },
@@ -97,7 +97,7 @@ describe("getTurnoverReport", () => {
       data: { clientId: clientB.id, date: new Date("2026-04-15"), amountMinor: 30000 },
     });
     await testDb.prisma.payment.create({
-      data: { clientId: clientB.id, date: new Date("2026-04-20"), amountMinor: 10000 },
+      data: { clientId: clientB.id, date: new Date("2026-04-20"), amountMinor: 10000, method: "cash" },
     });
 
     const report = await getTurnoverReport(

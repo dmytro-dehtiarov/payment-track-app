@@ -1,17 +1,12 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
-const tursoUrl = process.env["TURSO_DATABASE_URL"];
-const tursoAuthToken = process.env["TURSO_AUTH_TOKEN"];
-
-// CLI operations (migrate, studio, db pull) go through the datasource url
-// directly -- there's no separate authToken field here like the JS adapter
-// takes, so it's appended as a query param for Turso.
-const datasourceUrl =
-  tursoUrl && tursoAuthToken
-    ? `${tursoUrl}?authToken=${tursoAuthToken}`
-    : (process.env["DATABASE_URL"] ?? tursoUrl);
-
+// CLI operations (migrate dev/deploy, studio, db pull) always target the
+// local SQLite file -- Prisma's CLI schema-engine can't connect to Turso's
+// libsql:// URLs at all (fails with P1013), regardless of query params.
+// Migrations are developed here, then deployed to Turso separately via
+// `npm run db:migrate:turso` (scripts/migrate-turso.mjs), which doesn't go
+// through this config.
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
@@ -19,6 +14,6 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    url: datasourceUrl,
+    url: process.env["DATABASE_URL"],
   },
 });

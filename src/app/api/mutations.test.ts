@@ -325,6 +325,7 @@ describe("POST /api/clients/:id/payments and PATCH/DELETE /api/payments/:id", ()
       await authedRequest(`http://localhost/api/clients/${client.id}/payments`, "POST", {
         date: "2026-01-10",
         amountMinor: 12000,
+        method: "cash",
       }),
       ctx(client.id)
     );
@@ -346,5 +347,47 @@ describe("POST /api/clients/:id/payments and PATCH/DELETE /api/payments/:id", ()
     expect(deleteResponse.status).toBe(204);
     expect(await testDb.prisma.payment.findUnique({ where: { id: payment.id } })).toBeNull();
     expect(await getClientBalance(client.id, testDb.prisma)).toBe(30000);
+  });
+
+  it("rejects a payment with no method with 400", async () => {
+    const client = await createTestClient();
+    const response = await createPaymentRoute(
+      await authedRequest(`http://localhost/api/clients/${client.id}/payments`, "POST", {
+        date: "2026-01-01",
+        amountMinor: 5000,
+      }),
+      ctx(client.id)
+    );
+    expect(response.status).toBe(400);
+  });
+
+  it("rejects an invalid method value with 400", async () => {
+    const client = await createTestClient();
+    const response = await createPaymentRoute(
+      await authedRequest(`http://localhost/api/clients/${client.id}/payments`, "POST", {
+        date: "2026-01-01",
+        amountMinor: 5000,
+        method: "crypto",
+      }),
+      ctx(client.id)
+    );
+    expect(response.status).toBe(400);
+  });
+
+  it("stores methodDetail alongside a card payment", async () => {
+    const client = await createTestClient();
+    const response = await createPaymentRoute(
+      await authedRequest(`http://localhost/api/clients/${client.id}/payments`, "POST", {
+        date: "2026-01-01",
+        amountMinor: 5000,
+        method: "card",
+        methodDetail: "Visa **** 1234",
+      }),
+      ctx(client.id)
+    );
+    expect(response.status).toBe(201);
+    const payment = await response.json();
+    expect(payment.method).toBe("card");
+    expect(payment.methodDetail).toBe("Visa **** 1234");
   });
 });

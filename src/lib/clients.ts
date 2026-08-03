@@ -1,5 +1,6 @@
 import { calculateBalance } from "@/lib/balance";
 import { prisma } from "@/lib/db";
+import type { PaymentMethod } from "@/lib/paymentMethod";
 
 export const CLIENT_SORT_FIELDS = ["balance", "name", "lastActivity"] as const;
 export type ClientSortField = (typeof CLIENT_SORT_FIELDS)[number];
@@ -35,6 +36,11 @@ export interface LedgerEntry {
   createdAt: Date;
 }
 
+export interface PaymentLedgerEntry extends LedgerEntry {
+  method: PaymentMethod;
+  methodDetail: string | null;
+}
+
 export interface ClientDetail {
   id: string;
   name: string;
@@ -45,7 +51,7 @@ export interface ClientDetail {
   archived: boolean;
   balance: number;
   invoices: LedgerEntry[];
-  payments: LedgerEntry[];
+  payments: PaymentLedgerEntry[];
 }
 
 export async function getClientDetail(id: string): Promise<ClientDetail | null> {

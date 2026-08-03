@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { type FormEvent, useState } from "react";
 import { todayDateInputValue, toMinorUnits } from "@/lib/money";
+import { PAYMENT_METHODS, type PaymentMethod } from "@/lib/paymentMethod";
 
 interface QuickAddFormProps {
   clientId: string;
@@ -17,6 +18,8 @@ export function QuickAddForm({ clientId, kind, onDone, onCancel }: QuickAddFormP
   const [date, setDate] = useState(todayDateInputValue);
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const [method, setMethod] = useState<PaymentMethod | null>(null);
+  const [methodDetail, setMethodDetail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,14 +32,29 @@ export function QuickAddForm({ clientId, kind, onDone, onCancel }: QuickAddFormP
       return;
     }
 
+    if (kind === "payment" && !method) {
+      setError(tCommon("methodRequired"));
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
 
     const path = kind === "invoice" ? "invoices" : "payments";
+    const body: Record<string, unknown> = {
+      date,
+      amountMinor,
+      description: description.trim() || undefined,
+    };
+    if (kind === "payment") {
+      body.method = method;
+      body.methodDetail = methodDetail.trim() || undefined;
+    }
+
     const response = await fetch(`/api/clients/${clientId}/${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ date, amountMinor, description: description.trim() || undefined }),
+      body: JSON.stringify(body),
     });
 
     setSubmitting(false);
@@ -93,6 +111,36 @@ export function QuickAddForm({ clientId, kind, onDone, onCancel }: QuickAddFormP
           />
         </div>
       </div>
+
+      {kind === "payment" && (
+        <div className="space-y-2">
+          <span className="block text-xs text-gray-500 dark:text-gray-400">{tCommon("method")}</span>
+          <div className="flex flex-wrap gap-4">
+            {PAYMENT_METHODS.map((option) => (
+              <label key={option} className="flex items-center gap-1.5 text-sm text-gray-900 dark:text-gray-100">
+                <input
+                  type="radio"
+                  name="payment-method"
+                  required
+                  checked={method === option}
+                  onChange={() => setMethod(option)}
+                  className="h-4 w-4"
+                />
+                {tCommon(`method_${option}`)}
+              </label>
+            ))}
+          </div>
+          {method === "card" && (
+            <input
+              value={methodDetail}
+              onChange={(event) => setMethodDetail(event.target.value)}
+              placeholder={tCommon("methodDetailPlaceholder")}
+              className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+            />
+          )}
+        </div>
+      )}
+
       <div className="flex justify-end gap-2">
         <button
           type="button"

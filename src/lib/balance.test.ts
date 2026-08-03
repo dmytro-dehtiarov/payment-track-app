@@ -62,7 +62,7 @@ describe("getClientBalance (real SQLite aggregation)", () => {
   it("sums payments only, yielding a negative balance", async () => {
     const client = await createClient();
     await testDb.prisma.payment.create({
-      data: { clientId: client.id, date: new Date("2026-01-01"), amountMinor: 12000 },
+      data: { clientId: client.id, date: new Date("2026-01-01"), amountMinor: 12000, method: "cash" },
     });
     expect(await getClientBalance(client.id, testDb.prisma)).toBe(-12000);
   });
@@ -73,7 +73,7 @@ describe("getClientBalance (real SQLite aggregation)", () => {
       data: { clientId: client.id, date: new Date("2026-01-01"), amountMinor: 10000 },
     });
     await testDb.prisma.payment.create({
-      data: { clientId: client.id, date: new Date("2026-01-10"), amountMinor: 15000 },
+      data: { clientId: client.id, date: new Date("2026-01-10"), amountMinor: 15000, method: "cash" },
     });
     expect(await getClientBalance(client.id, testDb.prisma)).toBe(-5000);
   });
@@ -84,7 +84,7 @@ describe("getClientBalance (real SQLite aggregation)", () => {
       data: { clientId: client.id, date: new Date("2026-01-01"), amountMinor: 42000 },
     });
     await testDb.prisma.payment.create({
-      data: { clientId: client.id, date: new Date("2026-01-15"), amountMinor: 42000 },
+      data: { clientId: client.id, date: new Date("2026-01-15"), amountMinor: 42000, method: "cash" },
     });
     expect(await getClientBalance(client.id, testDb.prisma)).toBe(0);
   });
@@ -100,8 +100,8 @@ describe("getClientBalance (real SQLite aggregation)", () => {
     });
     await testDb.prisma.payment.createMany({
       data: [
-        { clientId: client.id, date: new Date("2026-02-01"), amountMinor: 8000 },
-        { clientId: client.id, date: new Date("2026-03-15"), amountMinor: 7000 },
+        { clientId: client.id, date: new Date("2026-02-01"), amountMinor: 8000, method: "cash" },
+        { clientId: client.id, date: new Date("2026-03-15"), amountMinor: 7000, method: "cash" },
       ],
     });
     expect(await getClientBalance(client.id, testDb.prisma)).toBe(20000);
@@ -129,6 +129,7 @@ describe("getClientBalance (real SQLite aggregation)", () => {
         clientId: client.id,
         date: new Date(2026, 1, 1 + (i % 28)),
         amountMinor,
+        method: "cash" as const,
       })),
     });
 

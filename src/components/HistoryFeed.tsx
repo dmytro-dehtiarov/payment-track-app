@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useState } from "react";
 import { formatDateOnly, formatMinorAmount, toBcp47, toMinorUnits, type Language } from "@/lib/money";
+import { PAYMENT_METHODS, type PaymentMethod } from "@/lib/paymentMethod";
 
 export interface HistoryEntry {
   id: string;
@@ -10,6 +11,8 @@ export interface HistoryEntry {
   date: Date;
   amountMinor: number;
   description: string | null;
+  method?: PaymentMethod;
+  methodDetail?: string | null;
 }
 
 export function HistoryFeed({
@@ -53,6 +56,8 @@ function HistoryRow({
   const [date, setDate] = useState(entry.date.toISOString().slice(0, 10));
   const [amount, setAmount] = useState(String(entry.amountMinor / 100));
   const [description, setDescription] = useState(entry.description ?? "");
+  const [method, setMethod] = useState<PaymentMethod | null>(entry.method ?? null);
+  const [methodDetail, setMethodDetail] = useState(entry.methodDetail ?? "");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,13 +72,28 @@ function HistoryRow({
       return;
     }
 
+    if (entry.kind === "payment" && !method) {
+      setError(tCommon("methodRequired"));
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
+
+    const body: Record<string, unknown> = {
+      date,
+      amountMinor,
+      description: description.trim() || null,
+    };
+    if (entry.kind === "payment") {
+      body.method = method;
+      body.methodDetail = methodDetail.trim() || null;
+    }
 
     const response = await fetch(`/api/${apiPath}/${entry.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ date, amountMinor, description: description.trim() || null }),
+      body: JSON.stringify(body),
     });
 
     setSubmitting(false);
@@ -98,37 +118,69 @@ function HistoryRow({
   if (editing) {
     return (
       <li className="rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-800 dark:bg-gray-900">
-        <form onSubmit={handleSave} className="flex flex-wrap items-end gap-3">
-          {error && <p className="w-full text-sm text-red-700 dark:text-red-400">{error}</p>}
-          <div className="space-y-1">
-            <label className="block text-xs text-gray-500 dark:text-gray-400">{t("date")}</label>
-            <input
-              type="date"
-              required
-              value={date}
-              onChange={(event) => setDate(event.target.value)}
-              className="rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-            />
+        <form onSubmit={handleSave} className="space-y-3">
+          {error && <p className="text-sm text-red-700 dark:text-red-400">{error}</p>}
+          <div className="flex flex-wrap items-end gap-3">
+            <div className="space-y-1">
+              <label className="block text-xs text-gray-500 dark:text-gray-400">{t("date")}</label>
+              <input
+                type="date"
+                required
+                value={date}
+                onChange={(event) => setDate(event.target.value)}
+                className="rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="block text-xs text-gray-500 dark:text-gray-400">{t("amount")}</label>
+              <input
+                required
+                inputMode="decimal"
+                value={amount}
+                onChange={(event) => setAmount(event.target.value)}
+                className="w-28 rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+              />
+            </div>
+            <div className="min-w-40 flex-1 space-y-1">
+              <label className="block text-xs text-gray-500 dark:text-gray-400">{t("description")}</label>
+              <input
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+              />
+            </div>
           </div>
-          <div className="space-y-1">
-            <label className="block text-xs text-gray-500 dark:text-gray-400">{t("amount")}</label>
-            <input
-              required
-              inputMode="decimal"
-              value={amount}
-              onChange={(event) => setAmount(event.target.value)}
-              className="w-28 rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-            />
-          </div>
-          <div className="min-w-40 flex-1 space-y-1">
-            <label className="block text-xs text-gray-500 dark:text-gray-400">{t("description")}</label>
-            <input
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-            />
-          </div>
-          <div className="flex gap-2">
+
+          {entry.kind === "payment" && (
+            <div className="space-y-2">
+              <span className="block text-xs text-gray-500 dark:text-gray-400">{tCommon("method")}</span>
+              <div className="flex flex-wrap gap-4">
+                {PAYMENT_METHODS.map((option) => (
+                  <label key={option} className="flex items-center gap-1.5 text-sm text-gray-900 dark:text-gray-100">
+                    <input
+                      type="radio"
+                      name={`payment-method-${entry.id}`}
+                      required
+                      checked={method === option}
+                      onChange={() => setMethod(option)}
+                      className="h-4 w-4"
+                    />
+                    {tCommon(`method_${option}`)}
+                  </label>
+                ))}
+              </div>
+              {method === "card" && (
+                <input
+                  value={methodDetail}
+                  onChange={(event) => setMethodDetail(event.target.value)}
+                  placeholder={tCommon("methodDetailPlaceholder")}
+                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                />
+              )}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={() => setEditing(false)}
@@ -167,6 +219,8 @@ function HistoryRow({
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
             {formatDateOnly(entry.date, locale)}
+            {entry.method ? ` · ${tCommon(`method_${entry.method}`)}` : ""}
+            {entry.methodDetail ? ` (${entry.methodDetail})` : ""}
             {entry.description ? ` · ${entry.description}` : ""}
           </p>
         </div>

@@ -7,7 +7,13 @@
     "balance_overpaid": "Переплата: {amount}",
     "balance_settled": "Оплачено полностью",
     "cancel": "Отмена",
-    "backToClients": "← Все клиенты"
+    "backToClients": "← Все клиенты",
+    "method": "Способ оплаты",
+    "method_cash": "Наличка",
+    "method_card": "Карта",
+    "method_bank_account": "Расчётный счёт",
+    "methodRequired": "Выберите способ оплаты",
+    "methodDetailPlaceholder": "Номер карты или название"
   },
   "HomePage": {
     "title": "Клиенты",

@@ -7,7 +7,13 @@
     "balance_overpaid": "Overpaid: {amount}",
     "balance_settled": "Fully paid",
     "cancel": "Cancel",
-    "backToClients": "← All clients"
+    "backToClients": "← All clients",
+    "method": "Payment method",
+    "method_cash": "Cash",
+    "method_card": "Card",
+    "method_bank_account": "Bank account",
+    "methodRequired": "Choose a payment method",
+    "methodDetailPlaceholder": "Card number or name"
   },
   "HomePage": {
     "title": "Clients",
