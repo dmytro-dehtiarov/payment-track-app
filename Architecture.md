@@ -27,7 +27,7 @@
 |---|---|---|
 | id | UUID | Первичный ключ |
 | name | String | Имя / название (человек, ФОП, предприятие) |
-| type | Enum | person / fop / company |
+| type | Enum | person / kindergarten / school |
 | contactInfo | String? | Телефон, email (опционально) |
 | notes | Text? | Заметки |
 | createdAt | DateTime | Дата создания записи |

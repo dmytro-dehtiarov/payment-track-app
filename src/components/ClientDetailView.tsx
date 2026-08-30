@@ -25,6 +25,9 @@ export function ClientDetailView({ client, currencySymbol }: { client: ClientDet
   const [savingClient, setSavingClient] = useState(false);
   const [clientError, setClientError] = useState<string | null>(null);
   const [addingKind, setAddingKind] = useState<"invoice" | "payment" | null>(null);
+  const [filterFrom, setFilterFrom] = useState("");
+  const [filterTo, setFilterTo] = useState("");
+  const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
   function refresh() {
     router.refresh();
@@ -70,7 +73,18 @@ export function ClientDetailView({ client, currencySymbol }: { client: ClientDet
   const entries = [
     ...client.invoices.map((invoice) => ({ ...invoice, kind: "invoice" as const })),
     ...client.payments.map((payment) => ({ ...payment, kind: "payment" as const })),
-  ].sort((a, b) => b.date.getTime() - a.date.getTime());
+  ];
+
+  const filteredEntries = entries
+    .filter((entry) => {
+      const day = entry.date.toISOString().slice(0, 10);
+      if (filterFrom && day < filterFrom) return false;
+      if (filterTo && day > filterTo) return false;
+      return true;
+    })
+    .sort((a, b) => (sortOrder === "desc" ? b.date.getTime() - a.date.getTime() : a.date.getTime() - b.date.getTime()));
+
+  const hasFilter = filterFrom !== "" || filterTo !== "";
 
   return (
     <div className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
@@ -98,8 +112,8 @@ export function ClientDetailView({ client, currencySymbol }: { client: ClientDet
               className="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
             >
               <option value="person">{tCommon("clientType_person")}</option>
-              <option value="fop">{tCommon("clientType_fop")}</option>
-              <option value="company">{tCommon("clientType_company")}</option>
+              <option value="kindergarten">{tCommon("clientType_kindergarten")}</option>
+              <option value="school">{tCommon("clientType_school")}</option>
             </select>
             <input
               value={contactInfo}
@@ -201,7 +215,56 @@ export function ClientDetailView({ client, currencySymbol }: { client: ClientDet
       )}
 
       <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-gray-100">{t("history")}</h2>
-      <HistoryFeed entries={entries} currencySymbol={currencySymbol} onChanged={refresh} />
+
+      <div className="mb-4 flex flex-wrap items-end gap-3">
+        <div className="space-y-1">
+          <label className="block text-xs text-gray-500 dark:text-gray-400">{t("filterFrom")}</label>
+          <input
+            type="date"
+            value={filterFrom}
+            onChange={(event) => setFilterFrom(event.target.value)}
+            className="rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="block text-xs text-gray-500 dark:text-gray-400">{t("filterTo")}</label>
+          <input
+            type="date"
+            value={filterTo}
+            onChange={(event) => setFilterTo(event.target.value)}
+            className="rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="block text-xs text-gray-500 dark:text-gray-400">{t("sortOrder")}</label>
+          <select
+            value={sortOrder}
+            onChange={(event) => setSortOrder(event.target.value as "desc" | "asc")}
+            className="rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+          >
+            <option value="desc">{t("sortNewestFirst")}</option>
+            <option value="asc">{t("sortOldestFirst")}</option>
+          </select>
+        </div>
+        {hasFilter && (
+          <button
+            type="button"
+            onClick={() => {
+              setFilterFrom("");
+              setFilterTo("");
+            }}
+            className="text-sm text-gray-600 hover:underline dark:text-gray-400"
+          >
+            {t("clearFilter")}
+          </button>
+        )}
+      </div>
+
+      {hasFilter && filteredEntries.length === 0 ? (
+        <p className="text-sm text-gray-500 dark:text-gray-400">{t("noFilterResults")}</p>
+      ) : (
+        <HistoryFeed entries={filteredEntries} currencySymbol={currencySymbol} onChanged={refresh} />
+      )}
     </div>
   );
 }

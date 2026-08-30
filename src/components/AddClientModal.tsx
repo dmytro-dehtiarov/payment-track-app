@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 
-type ClientType = "person" | "fop" | "company";
+type ClientType = "person" | "kindergarten" | "school";
 
 export function AddClientButton() {
   const t = useTranslations("AddClientModal");
@@ -89,8 +89,8 @@ export function AddClientButton() {
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                 >
                   <option value="person">{tCommon("clientType_person")}</option>
-                  <option value="fop">{tCommon("clientType_fop")}</option>
-                  <option value="company">{tCommon("clientType_company")}</option>
+                  <option value="kindergarten">{tCommon("clientType_kindergarten")}</option>
+                  <option value="school">{tCommon("clientType_school")}</option>
                 </select>
               </div>
               <div className="flex justify-end gap-2 pt-2">

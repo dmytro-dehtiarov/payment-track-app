@@ -1,8 +1,8 @@
 {
   "Common": {
     "clientType_person": "Физлицо",
-    "clientType_fop": "ФОП",
-    "clientType_company": "Компания",
+    "clientType_kindergarten": "Садик",
+    "clientType_school": "Школа",
     "balance_owesMe": "Должен мне: {amount}",
     "balance_overpaid": "Переплата: {amount}",
     "balance_settled": "Оплачено полностью",
@@ -50,7 +50,14 @@
     "notesPlaceholder": "Заметки",
     "addInvoice": "Добавить счёт",
     "addPayment": "Добавить оплату",
-    "history": "История"
+    "history": "История",
+    "filterFrom": "С",
+    "filterTo": "По",
+    "clearFilter": "Сбросить фильтр",
+    "noFilterResults": "Нет записей за этот период.",
+    "sortOrder": "Сортировка",
+    "sortNewestFirst": "Сначала новые",
+    "sortOldestFirst": "Сначала старые"
   },
   "QuickAddForm": {
     "addInvoiceTitle": "Добавить счёт",

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const clientTypeSchema = z.enum(["person", "fop", "company"]);
+export const clientTypeSchema = z.enum(["person", "kindergarten", "school"]);
 
 export const clientCreateSchema = z.object({
   name: z.string().trim().min(1),

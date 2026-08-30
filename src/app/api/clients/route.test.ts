@@ -35,7 +35,7 @@ describe("GET /api/clients", () => {
 
   it("matches names case-insensitively, including Cyrillic", async () => {
     await testDb.prisma.client.create({ data: { name: "Иван Петров", type: "person" } });
-    await testDb.prisma.client.create({ data: { name: "ООО Ромашка", type: "company" } });
+    await testDb.prisma.client.create({ data: { name: "ООО Ромашка", type: "school" } });
 
     const results = await authedGet("http://localhost/api/clients?search=иван");
     expect(results.map((c: { name: string }) => c.name)).toEqual(["Иван Петров"]);

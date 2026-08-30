@@ -9,8 +9,8 @@ datasource db {
 
 enum ClientType {
   person
-  fop
-  company
+  kindergarten
+  school
 }
 
 enum Theme {

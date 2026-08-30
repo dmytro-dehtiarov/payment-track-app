@@ -1,8 +1,8 @@
 {
   "Common": {
     "clientType_person": "Individual",
-    "clientType_fop": "Sole proprietor",
-    "clientType_company": "Company",
+    "clientType_kindergarten": "Kindergarten",
+    "clientType_school": "School",
     "balance_owesMe": "Owes me: {amount}",
     "balance_overpaid": "Overpaid: {amount}",
     "balance_settled": "Fully paid",
@@ -50,7 +50,14 @@
     "notesPlaceholder": "Notes",
     "addInvoice": "Add invoice",
     "addPayment": "Add payment",
-    "history": "History"
+    "history": "History",
+    "filterFrom": "From",
+    "filterTo": "To",
+    "clearFilter": "Clear filter",
+    "noFilterResults": "No records in this date range.",
+    "sortOrder": "Sort",
+    "sortNewestFirst": "Newest first",
+    "sortOldestFirst": "Oldest first"
   },
   "QuickAddForm": {
     "addInvoiceTitle": "Add invoice",

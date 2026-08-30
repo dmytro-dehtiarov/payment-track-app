@@ -15,7 +15,7 @@ export interface ListClientsParams {
 export interface ClientListItem {
   id: string;
   name: string;
-  type: "person" | "fop" | "company";
+  type: "person" | "kindergarten" | "school";
   contactInfo: string | null;
   notes: string | null;
   createdAt: Date;
