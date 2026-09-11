@@ -52,8 +52,8 @@ async function main() {
     )
   `);
 
-  const { rows } = await client.execute(`SELECT migration_name FROM "_prisma_migrations"`);
-  const applied = new Set(rows.map((row) => row.migration_name));
+  const { rows } = await client.execute(`SELECT migration_name, checksum FROM "_prisma_migrations"`);
+  const applied = new Map(rows.map((row) => [row.migration_name, row.checksum]));
 
   const migrationDirs = fs
     .readdirSync(MIGRATIONS_DIR)
@@ -61,12 +61,22 @@ async function main() {
     .sort();
 
   for (const dir of migrationDirs) {
+    const sql = fs.readFileSync(path.join(MIGRATIONS_DIR, dir, "migration.sql"), "utf8");
+    const sqlChecksum = checksum(sql);
+
     if (applied.has(dir)) {
+      const appliedChecksum = applied.get(dir);
+      if (appliedChecksum !== sqlChecksum) {
+        throw new Error(
+          `Checksum mismatch for migration "${dir}": applied checksum ${appliedChecksum} does not match ` +
+            `current migration.sql checksum ${sqlChecksum}. The migration file was modified after being ` +
+            `applied to Turso -- this must be resolved manually (do not edit applied migrations).`
+        );
+      }
       console.log(`Already applied: ${dir}`);
       continue;
     }
 
-    const sql = fs.readFileSync(path.join(MIGRATIONS_DIR, dir, "migration.sql"), "utf8");
     console.log(`Applying ${dir}...`);
 
     const tx = await client.transaction("write");
@@ -75,7 +85,7 @@ async function main() {
       await tx.execute({
         sql: `INSERT INTO "_prisma_migrations" (id, checksum, finished_at, migration_name, started_at, applied_steps_count)
               VALUES (?, ?, ?, ?, ?, 1)`,
-        args: [crypto.randomUUID(), checksum(sql), Date.now(), dir, Date.now()],
+        args: [crypto.randomUUID(), sqlChecksum, Date.now(), dir, Date.now()],
       });
       await tx.commit();
       console.log(`Applied ${dir}`);
